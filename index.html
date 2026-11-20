@@ -4,379 +4,470 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VERDANT | Biology Lab</title>
-
+<title>VERDANT — Photosynthesis Laboratory</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 :root {
-  --green: #8bff9c;
-  --green2: #20db72;
-  --blue: #5bd5ff;
-  --bg: #070b09;
-  --glass: rgba(255,255,255,.055);
-  --border: rgba(255,255,255,.12);
-  --muted: #929b95;
+  --bg:#050807;
+  --panel:rgba(255,255,255,.055);
+  --border:rgba(255,255,255,.12);
+  --green:#39ff82;
+  --green2:#a1ffb7;
+  --blue:#61d9ff;
+  --muted:#87958c;
 }
 
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: Inter, sans-serif;
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
   background:
-    radial-gradient(ellipse at 50% 0%, #123321 0%, transparent 45%),
-    radial-gradient(ellipse at 90% 80%, #10251c 0%, transparent 35%),
+    radial-gradient(ellipse at 60% -10%,#174b2c 0%,transparent 45%),
+    radial-gradient(ellipse at 0% 70%,#10251b 0%,transparent 35%),
     var(--bg);
-  color: white;
-  padding: 25px;
+  color:white;
+  font-family:Inter,sans-serif;
+  overflow-x:hidden;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: .12;
-  background-image: radial-gradient(#ffffff 0.6px, transparent .6px);
-  background-size: 25px 25px;
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.12;
+  background-image:radial-gradient(#fff .6px,transparent .6px);
+  background-size:26px 26px;
+  z-index:-1;
 }
 
-.dashboard {
-  max-width: 1450px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: 210px 1fr;
-  gap: 20px;
-  position: relative;
+button,input{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--green);outline-offset:4px}
+
+.glass{
+  background:linear-gradient(135deg,rgba(255,255,255,.105),rgba(255,255,255,.025));
+  border:1px solid var(--border);
+  backdrop-filter:blur(28px);
+  -webkit-backdrop-filter:blur(28px);
+  border-radius:22px;
+  box-shadow:0 15px 55px #0005,inset 0 1px rgba(255,255,255,.1);
+  position:relative;
+  overflow:hidden;
 }
 
-.glass {
-  background: linear-gradient(
-    135deg,
-    rgba(255,255,255,.09),
-    rgba(255,255,255,.025)
-  );
-  border: 1px solid var(--border);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border-radius: 22px;
-  box-shadow: 0 12px 45px #0006,
-              inset 0 1px rgba(255,255,255,.08);
+.glass:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.035),transparent 70%);
+  pointer-events:none;
 }
 
-.sidebar {
-  min-height: 850px;
-  padding: 25px 16px;
-  display: flex;
-  flex-direction: column;
+.dashboard{
+  max-width:1500px;
+  margin:auto;
+  padding:22px;
+  display:grid;
+  grid-template-columns:220px minmax(0,1fr);
+  gap:22px;
 }
 
-.logo {
-  font-size: 23px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  padding: 10px;
+.sidebar{
+  height:calc(100vh - 44px);
+  min-height:650px;
+  position:sticky;
+  top:22px;
+  padding:25px 15px;
+  display:flex;
+  flex-direction:column;
 }
 
-.logo span { color: var(--green); }
-
-.tagline {
-  font-size: 10px;
-  letter-spacing: 3px;
-  color: var(--muted);
-  padding: 0 10px;
-  margin-top: 3px;
+.logo{
+  font-size:25px;
+  font-weight:900;
+  letter-spacing:3px;
+  padding:8px;
+}
+.logo span{color:var(--green)}
+.tagline{
+  font-size:9px;
+  letter-spacing:3px;
+  color:var(--muted);
+  padding:0 8px;
 }
 
-.nav { margin-top: 50px; }
-
-.nav-item {
-  padding: 15px;
-  margin-bottom: 9px;
-  border-radius: 13px;
-  color: var(--muted);
-  font-size: 13px;
-  cursor: pointer;
-  transition: .25s;
+.nav{margin-top:45px}
+.nav a{
+  display:block;
+  text-decoration:none;
+  color:var(--muted);
+  padding:14px;
+  margin:6px 0;
+  border-radius:12px;
+  font-size:12px;
+  transition:.25s;
+}
+.nav a:hover,.nav a.active{
+  color:var(--green);
+  background:#39ff8210;
+  border:1px solid #39ff8230;
 }
 
-.nav-item:hover, .nav-item.active {
-  background: rgba(85,255,128,.1);
-  color: var(--green);
-  border: 1px solid rgba(85,255,128,.2);
-  box-shadow: 0 0 20px #28ff6912;
+.side-footer{
+  margin-top:auto;
+  color:var(--muted);
+  font-size:10px;
+  line-height:2;
+  padding:12px;
 }
 
-.sidebar-bottom {
-  margin-top: auto;
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.7;
-  padding: 12px;
+main{min-width:0}
+.topbar{
+  padding:18px 23px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:23px;
+}
+.topbar strong{font-size:13px}
+.topbar p{margin:5px 0 0;color:var(--muted);font-size:10px}
+
+.live{
+  color:var(--green);
+  font-size:10px;
+  letter-spacing:1px;
+}
+.dot{
+  display:inline-block;
+  width:7px;height:7px;
+  background:var(--green);
+  border-radius:50%;
+  margin-right:7px;
+  box-shadow:0 0 12px var(--green);
+  animation:pulse 1.8s infinite;
+}
+@keyframes pulse{50%{opacity:.35}}
+
+section{scroll-margin-top:25px;margin-bottom:35px}
+.eyebrow{
+  color:var(--green);
+  letter-spacing:3px;
+  font-size:9px;
+  font-weight:800;
 }
 
-main { min-width: 0; }
-
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 19px 24px;
-  margin-bottom: 25px;
+.hero{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  align-items:center;
+}
+.hero-copy{padding:20px 5px}
+h1{
+  font-size:clamp(39px,5vw,70px);
+  letter-spacing:-5px;
+  line-height:1.02;
+  margin:20px 0;
+}
+h1 span{
+  color:var(--green);
+  text-shadow:0 0 35px #39ff8255;
+}
+.description{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.9;
+  max-width:480px;
+}
+.brand{
+  margin-top:28px;
+  color:#a3b2a8;
+  font-size:10px;
+  letter-spacing:3px;
+}
+.plant-card{
+  min-height:330px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:radial-gradient(circle,#185e34 0%,#0a2515 40%,transparent 75%);
+  transition:background .5s;
+}
+.plant-stage{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  position:relative;
+}
+.plant{
+  font-size:135px;
+  filter:drop-shadow(0 0 30px #39ff8290);
+  transform:scale(1);
+  transition:filter .5s,transform .5s;
+  animation:float 4s ease-in-out infinite;
+}
+@keyframes float{
+  0%,100%{translate:0 0}
+  50%{translate:0 -12px}
+}
+.plant-status{
+  color:var(--green);
+  font-size:10px;
+  letter-spacing:3px;
+  margin-top:10px;
+}
+.particles{
+  position:absolute;
+  top:10%;
+  width:100%;
+  text-align:center;
+  font-size:14px;
+  letter-spacing:25px;
+  color:var(--green2);
+  opacity:.5;
+  animation:particle 5s infinite linear;
+  pointer-events:none;
+}
+@keyframes particle{
+  0%{transform:translateY(35px);opacity:0}
+  50%{opacity:.7}
+  100%{transform:translateY(-70px);opacity:0}
 }
 
-.topbar h3 {
-  margin: 0;
-  font-size: 14px;
+.section-heading{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:20px 0 15px;
+}
+.section-heading h2{
+  font-size:13px;
+  letter-spacing:2px;
+}
+.section-heading span{
+  color:var(--muted);
+  font-size:9px;
 }
 
-.topbar p {
-  color: var(--muted);
-  margin: 5px 0 0;
-  font-size: 11px;
+.grid{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:17px;
+}
+.panel{padding:24px}
+.panel h3{font-size:14px;margin:0 0 23px}
+.control{margin:27px 0}
+.control-header{
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  margin-bottom:14px;
+}
+.control-header strong{font-weight:600}
+.value{color:var(--green);font-weight:800}
+
+input[type=range]{
+  appearance:none;
+  width:100%;
+  height:5px;
+  border-radius:20px;
+  background:linear-gradient(90deg,var(--green) 0%,#ffffff20 0%);
+  cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  appearance:none;
+  width:17px;height:17px;
+  background:var(--green);
+  border:3px solid white;
+  border-radius:50%;
+  box-shadow:0 0 16px var(--green);
 }
 
-.live {
-  color: var(--green);
-  font-size: 11px;
-  background: #8bff9c12;
-  padding: 10px 15px;
-  border-radius: 30px;
-  border: 1px solid #8bff9c30;
+.mini-description{
+  color:var(--muted);
+  font-size:10px;
+  margin-top:9px;
+  line-height:1.6;
 }
 
-.dot {
-  display: inline-block;
-  height: 7px;
-  width: 7px;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 12px var(--green);
-  margin-right: 7px;
+.reset{
+  background:#ffffff0b;
+  color:white;
+  border:1px solid var(--border);
+  padding:12px 17px;
+  border-radius:11px;
+  font-size:10px;
+  font-weight:700;
+  transition:.2s;
+}
+.reset:hover{border-color:var(--green);color:var(--green)}
+
+.rate{
+  font-size:65px;
+  font-weight:900;
+  letter-spacing:-5px;
+  color:var(--green);
+  margin:14px 0;
+}
+.bar{
+  height:8px;
+  border-radius:20px;
+  background:#ffffff16;
+  overflow:hidden;
+}
+.progress{
+  height:100%;
+  width:50%;
+  background:linear-gradient(90deg,#20db72,#a1ffb7);
+  box-shadow:0 0 20px var(--green);
+  transition:width .4s;
+}
+.status{
+  color:var(--green);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-top:22px;
+}
+.explanation{
+  font-size:11px;
+  color:var(--muted);
+  line-height:1.8;
+}
+.metric{
+  display:flex;
+  justify-content:space-between;
+  border-bottom:1px solid #ffffff12;
+  padding:13px 0;
+  font-size:11px;
+}
+.metric span{color:var(--muted)}
+.metric strong{color:var(--green)}
+
+.notification{
+  position:fixed;
+  right:25px;
+  bottom:25px;
+  z-index:20;
+  width:min(340px,calc(100% - 30px));
+  padding:19px;
+  opacity:0;
+  transform:translateY(20px) scale(.96);
+  pointer-events:none;
+  transition:.3s;
+}
+.notification.show{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+.notification h3{font-size:11px;color:var(--green);margin:0 0 8px}
+.notification p{font-size:11px;color:#c1cec5;line-height:1.7;margin:5px 0}
+.notification .change{font-size:20px;font-weight:900;color:white}
+
+.equation{
+  text-align:center;
+  padding:30px 10px;
+  color:var(--green);
+  font-size:clamp(15px,2vw,24px);
+  font-weight:800;
+  line-height:2;
+}
+.equation button{
+  color:inherit;
+  background:#39ff8210;
+  border:1px solid #39ff8230;
+  padding:6px;
+  border-radius:8px;
+  font-weight:800;
+  transition:.2s;
+}
+.equation button:hover{background:#39ff8230}
+.equation small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:400;
 }
 
-.hero {
-  display: grid;
-  grid-template-columns: 1.1fr .9fr;
-  gap: 20px;
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:13px;
+}
+.info-card{
+  padding:22px;
+  cursor:pointer;
+  transition:.25s;
+}
+.info-card:hover{
+  transform:translateY(-4px);
+  border-color:#39ff8250;
+}
+.info-icon{font-size:25px}
+.info-card h3{font-size:12px}
+.info-card p{
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.8;
 }
 
-.eyebrow {
-  color: var(--green);
-  font-size: 10px;
-  letter-spacing: 4px;
-  font-weight: 700;
+.quiz-question{font-size:15px;line-height:1.6}
+.answers{display:grid;gap:10px}
+.answer{
+  text-align:left;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#ffffff08;
+  color:white;
+  font-size:11px;
+  transition:.2s;
+}
+.answer:hover{border-color:var(--green);background:#39ff8210}
+.answer.correct{border-color:var(--green);background:#39ff8220}
+.answer.wrong{border-color:#ff6464;background:#ff646410}
+.quiz-feedback{font-size:11px;line-height:1.8;color:var(--muted);margin-top:15px}
+.primary{
+  background:linear-gradient(110deg,#20db72,#a1ffb7);
+  border:0;
+  padding:13px 19px;
+  border-radius:11px;
+  color:#06120a;
+  font-weight:900;
+  font-size:10px;
+  margin-top:15px;
+}
+.primary:hover{box-shadow:0 0 25px #39ff8250}
+.hidden{display:none}
+
+.footer{
+  border-top:1px solid #ffffff15;
+  padding:25px 0;
+  color:var(--muted);
+  font-size:9px;
+  letter-spacing:2px;
+  text-align:center;
 }
 
-h1 {
-  font-size: clamp(38px, 5vw, 67px);
-  letter-spacing: -4px;
-  line-height: 1.05;
-  margin: 18px 0;
+@media(max-width:850px){
+  .dashboard{grid-template-columns:1fr}
+  .sidebar{height:auto;min-height:auto;position:relative}
+  .nav{display:flex;flex-wrap:wrap;margin-top:20px}
+  .nav a{padding:10px;font-size:10px}
+  .side-footer{display:none}
 }
-
-h1 span {
-  color: var(--green);
-  text-shadow: 0 0 35px #55ff7740;
+@media(max-width:600px){
+  .dashboard{padding:12px}
+  .hero,.grid{grid-template-columns:1fr}
+  .info-grid{grid-template-columns:1fr}
+  h1{letter-spacing:-3px}
+  .topbar{padding:15px}
 }
-
-.description {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.8;
-  max-width: 460px;
-}
-
-.plant-card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 280px;
-  overflow: hidden;
-  position: relative;
-  background: radial-gradient(circle, #1d6436 0%, #0b2114 40%, transparent 75%);
-}
-
-.plant {
-  font-size: 125px;
-  filter: drop-shadow(0 0 35px #6aff8b90);
-  animation: float 4s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
-}
-
-.section-title {
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: var(--muted);
-  margin: 30px 0 15px;
-  text-transform: uppercase;
-}
-
-.content-grid {
-  display: grid;
-  grid-template-columns: 1.1fr .9fr;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.panel { padding: 25px; }
-
-.panel h2 {
-  font-size: 16px;
-  margin: 0 0 25px;
-}
-
-.control { margin: 25px 0; }
-
-.control-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  margin-bottom: 13px;
-}
-
-.control-header strong { color: white; }
-
-.value { color: var(--green); }
-
-input[type=range] {
-  appearance: none;
-  width: 100%;
-  height: 5px;
-  border-radius: 20px;
-  background: #ffffff22;
-  outline: none;
-}
-
-input[type=range]::-webkit-slider-thumb {
-  appearance: none;
-  width: 17px;
-  height: 17px;
-  background: var(--green);
-  border-radius: 50%;
-  border: 3px solid #fff;
-  box-shadow: 0 0 15px var(--green);
-  cursor: pointer;
-}
-
-.result-number {
-  font-size: 58px;
-  font-weight: 900;
-  letter-spacing: -4px;
-  color: var(--green);
-  margin: 10px 0;
-}
-
-.progress {
-  height: 8px;
-  background: #ffffff15;
-  border-radius: 20px;
-  overflow: hidden;
-}
-
-#progress {
-  height: 100%;
-  width: 50%;
-  background: linear-gradient(90deg, #20db72, #b5ff91);
-  border-radius: 20px;
-  box-shadow: 0 0 20px #20db72;
-  transition: width .4s;
-}
-
-.status {
-  color: var(--green);
-  font-size: 12px;
-  margin-top: 20px;
-}
-
-.explanation {
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.7;
-}
-
-.equation {
-  font-size: 16px;
-  text-align: center;
-  line-height: 2.2;
-  font-weight: 700;
-  color: var(--green);
-  padding: 15px 0;
-}
-
-.equation small {
-  display: block;
-  color: var(--muted);
-  font-weight: 400;
-  font-size: 10px;
-}
-
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.info {
-  padding: 17px;
-  text-align: center;
-}
-
-.info strong {
-  display: block;
-  font-size: 22px;
-  color: var(--green);
-}
-
-.info small {
-  color: var(--muted);
-  font-size: 10px;
-}
-
-button {
-  background: linear-gradient(120deg,#20db72,#8bff9c);
-  color: #07130b;
-  border: 0;
-  border-radius: 12px;
-  padding: 13px 20px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: .25s;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 25px #20db7260;
-}
-
-.footer {
-  text-align: center;
-  color: #66736a;
-  font-size: 10px;
-  letter-spacing: 2px;
-  margin-top: 35px;
-}
-
-@media(max-width:850px) {
-  .dashboard { grid-template-columns: 1fr; }
-  .sidebar { min-height: auto; }
-  .nav { display: flex; flex-wrap: wrap; margin-top: 15px; }
-  .nav-item { margin-right: 5px; }
-  .sidebar-bottom { display: none; }
-}
-
-@media(max-width:600px) {
-  body { padding: 12px; }
-  .hero, .content-grid { grid-template-columns: 1fr; }
-  .info-grid { grid-template-columns: 1fr; }
-  h1 { letter-spacing: -2px; }
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
 </style>
 </head>
@@ -389,216 +480,579 @@ button:hover {
   <div class="logo">V<span>.</span>ERDANT</div>
   <div class="tagline">SCIENCE / LAB SYSTEM</div>
 
-  <div class="nav">
-    <div class="nav-item active">◈ &nbsp; Dashboard</div>
-    <div class="nav-item">⌬ &nbsp; Learn</div>
-    <div class="nav-item">◎ &nbsp; Simulator</div>
-    <div class="nav-item">▤ &nbsp; Equation</div>
-    <div class="nav-item">◉ &nbsp; Knowledge</div>
-  </div>
+  <nav class="nav">
+    <a class="active" href="#home">◈ &nbsp; Dashboard</a>
+    <a href="#simulator">⌬ &nbsp; Simulator</a>
+    <a href="#equation">◎ &nbsp; Equation</a>
+    <a href="#learning">▤ &nbsp; Learning Center</a>
+    <a href="#quiz">◉ &nbsp; Knowledge Check</a>
+  </nav>
 
-  <div class="sidebar-bottom">
+  <div class="side-footer">
     NATURE POWERED.<br>
     SCIENCE DRIVEN.<br><br>
-    SYSTEM VERSION 1.0
+    EST. BY SAHARSH<br>2026
   </div>
 </aside>
 
 <main>
 
-  <header class="topbar glass">
-    <div>
-      <h3>Photosynthesis Laboratory</h3>
-      <p>Interactive Biology Experience</p>
-    </div>
-    <div class="live"><span class="dot"></span> SYSTEM ONLINE</div>
-  </header>
+<header class="topbar glass">
+  <div>
+    <strong>PHOTOSYNTHESIS LABORATORY</strong>
+    <p>Interactive Biology Experience / Module 001</p>
+  </div>
+  <div class="live"><span class="dot"></span> SYSTEM ONLINE</div>
+</header>
 
-  <section class="hero">
-    <div>
-      <div class="eyebrow">BIOLOGY / MODULE 001</div>
-      <h1>PHOTOSYNTHESIS<br><span>IN ACTION.</span></h1>
-      <p class="description">
-        Explore how plants transform sunlight, water, and
-        carbon dioxide into chemical energy. Adjust the
-        variables and observe the limiting factors.
-      </p>
-    </div>
+<section id="home" class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">BIOLOGY / EXPERIMENT 001</div>
+    <h1>PHOTOSYNTHESIS<br><span>IN ACTION.</span></h1>
+    <p class="description">
+      Discover how plants transform sunlight, water, and carbon dioxide
+      into chemical energy. Control the environment and watch the
+      biological system respond in real time.
+    </p>
+    <div class="brand">EST. BY SAHARSH • 2026</div>
+  </div>
 
-    <div class="plant-card glass">
+  <div class="plant-card glass" id="plantCard">
+    <div class="plant-stage">
+      <div class="particles" id="particles">· · · · ·</div>
       <div class="plant" id="plant">🌱</div>
+      <div class="plant-status" id="plantStatus">HEALTHY SYSTEM</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <div class="section-title">01 / Live experiment</div>
+<section id="simulator">
+  <div class="section-heading">
+    <h2>01 / LIVE SIMULATION</h2>
+    <span>REAL-TIME INPUT CONTROLS</span>
+  </div>
 
-  <section class="content-grid">
-
+  <div class="grid">
     <div class="panel glass">
-      <h2>Environmental Variables</h2>
+      <h3>Environmental Variables</h3>
 
       <div class="control">
         <div class="control-header">
-          <strong>☀ &nbsp; Sunlight Intensity</strong>
+          <strong>☀️ Sunlight Intensity</strong>
           <span class="value" id="lightValue">50%</span>
         </div>
         <input type="range" id="light" min="0" max="100" value="50">
+        <div class="mini-description">Light energy captured by chlorophyll.</div>
       </div>
 
       <div class="control">
         <div class="control-header">
-          <strong>◉ &nbsp; Carbon Dioxide (CO₂)</strong>
+          <strong>💨 Carbon Dioxide (CO₂)</strong>
           <span class="value" id="co2Value">50%</span>
         </div>
         <input type="range" id="co2" min="0" max="100" value="50">
+        <div class="mini-description">Carbon source used to build glucose.</div>
       </div>
 
       <div class="control">
         <div class="control-header">
-          <strong>◇ &nbsp; Water Availability (H₂O)</strong>
+          <strong>💧 Water Availability (H₂O)</strong>
           <span class="value" id="waterValue">50%</span>
         </div>
         <input type="range" id="water" min="0" max="100" value="50">
+        <div class="mini-description">Water absorbed through the plant's roots.</div>
       </div>
 
-      <button onclick="resetLab()">RESET EXPERIMENT ↻</button>
+      <button class="reset" onclick="resetLab()">↻ RESET EXPERIMENT</button>
     </div>
 
     <div class="panel glass">
-      <h2>Photosynthesis Performance</h2>
-
-      <div class="eyebrow">SIMULATED RATE</div>
-      <div class="result-number" id="rate">50%</div>
-
-      <div class="progress">
-        <div id="progress"></div>
-      </div>
-
+      <h3>Photosynthesis Performance</h3>
+      <div class="eyebrow">SIMULATED ACTIVITY</div>
+      <div class="rate" id="rate">50%</div>
+      <div class="bar"><div class="progress" id="progress"></div></div>
       <div class="status" id="status">● MODERATE ACTIVITY</div>
-
       <p class="explanation" id="explanation">
-        Your plant has moderate availability of all three
-        required inputs.
+        All three inputs are currently available at moderate levels.
       </p>
-    </div>
 
-  </section>
-
-  <div class="section-title">02 / Scientific breakdown</div>
-
-  <section class="content-grid">
-
-    <div class="panel glass">
-      <h2>The Photosynthesis Equation</h2>
-
-      <div class="equation">
-        6CO₂ + 6H₂O + Light Energy
-        <br>↓<br>
-        C₆H₁₂O₆ + 6O₂
-
-        <small>
-          Carbon Dioxide + Water → Glucose + Oxygen
-        </small>
+      <div class="metric">
+        <span>Limiting factor</span>
+        <strong id="limiting">Balanced</strong>
+      </div>
+      <div class="metric">
+        <span>Sunlight</span>
+        <strong id="lightMetric">50%</strong>
+      </div>
+      <div class="metric">
+        <span>Carbon dioxide</span>
+        <strong id="co2Metric">50%</strong>
+      </div>
+      <div class="metric">
+        <span>Water</span>
+        <strong id="waterMetric">50%</strong>
       </div>
     </div>
-
-    <div class="panel glass">
-      <h2>Why It Matters</h2>
-      <p class="explanation">
-        Photosynthesis converts light energy into chemical
-        energy stored in glucose. Plants use this sugar to
-        support growth, while oxygen is released into the
-        atmosphere. This process supports food chains and
-        helps maintain Earth's atmosphere.
-      </p>
-    </div>
-
-  </section>
-
-  <section class="info-grid">
-    <div class="info glass">
-      <strong>CO₂</strong>
-      <small>CARBON INPUT</small>
-    </div>
-    <div class="info glass">
-      <strong>H₂O</strong>
-      <small>WATER INPUT</small>
-    </div>
-    <div class="info glass">
-      <strong>O₂</strong>
-      <small>OXYGEN OUTPUT</small>
-    </div>
-  </section>
-
-  <div class="footer">
-    VERDANT LABS © 2026 / BUILT FOR SCIENCE
   </div>
+</section>
+
+<section id="equation">
+  <div class="section-heading">
+    <h2>02 / CHEMICAL EQUATION</h2>
+    <span>INTERACTIVE MOLECULES</span>
+  </div>
+
+  <div class="panel glass">
+    <div class="equation">
+      <button onclick="showMolecule('co2')">6CO₂</button>
+      +
+      <button onclick="showMolecule('h2o')">6H₂O</button>
+      +
+      LIGHT ENERGY
+      <br>↓<br>
+      <button onclick="showMolecule('glucose')">C₆H₁₂O₆</button>
+      +
+      <button onclick="showMolecule('oxygen')">6O₂</button>
+      <small>Carbon dioxide + Water + Light → Glucose + Oxygen</small>
+    </div>
+    <p class="explanation" id="moleculeInfo" style="text-align:center">
+      Select a molecule to explore its role in photosynthesis.
+    </p>
+  </div>
+</section>
+
+<section id="learning">
+  <div class="section-heading">
+    <h2>03 / BIOLOGY KNOWLEDGE CENTER</h2>
+    <span>EXPLORE THE SCIENCE</span>
+  </div>
+
+  <div class="info-grid">
+
+    <article class="info-card glass" onclick="expandCard(this)">
+      <div class="info-icon">🌿</div>
+      <h3>Chloroplasts</h3>
+      <p>Organelles inside plant cells where photosynthesis occurs.</p>
+      <p class="hidden">Chloroplasts contain thylakoids, grana, and stroma. They are specialized to capture light energy and support the reactions of photosynthesis.</p>
+    </article>
+
+    <article class="info-card glass" onclick="expandCard(this)">
+      <div class="info-icon">☀️</div>
+      <h3>Chlorophyll</h3>
+      <p>The green pigment that absorbs light energy.</p>
+      <p class="hidden">Chlorophyll is found in the thylakoid membranes. It absorbs mainly red and blue wavelengths of light and reflects much of the green light.</p>
+    </article>
+
+    <article class="info-card glass" onclick="expandCard(this)">
+      <div class="info-icon">💨</div>
+      <h3>Stomata</h3>
+      <p>Tiny openings on leaves that allow gas exchange.</p>
+      <p class="hidden">Stomata allow carbon dioxide to enter and oxygen and water vapor to leave. Guard cells regulate their opening and closing.</p>
+    </article>
+
+    <article class="info-card glass" onclick="expandCard(this)">
+      <div class="info-icon">💧</div>
+      <h3>Water Absorption</h3>
+      <p>Roots absorb water from the surrounding soil.</p>
+      <p class="hidden">Water travels through xylem tissue toward the leaves. It supplies electrons and hydrogen ions for the light-dependent reactions.</p>
+    </article>
+
+    <article class="info-card glass" onclick="expandCard(this)">
+      <div class="info-icon">⚡</div>
+      <h3>Light Reactions</h3>
+      <p>Light energy is converted into chemical energy carriers.</p>
+      <p class="hidden">These reactions occur in the thylakoid membranes. Water is split, oxygen is released, and ATP and NADPH are produced.</p>
+    </article>
+
+    <article class="info-card glass" onclick="expandCard(this)">
+      <div class="info-icon">🧬</div>
+      <h3>Calvin Cycle</h3>
+      <p>Carbon dioxide is incorporated into organic molecules.</p>
+      <p class="hidden">The Calvin cycle occurs in the stroma. It uses ATP and NADPH to help convert fixed carbon into G3P, a molecule used to build sugars.</p>
+    </article>
+
+  </div>
+  <p class="mini-description">Select any learning card to reveal more scientific information.</p>
+</section>
+
+<section id="quiz">
+  <div class="section-heading">
+    <h2>04 / KNOWLEDGE CHECK</h2>
+    <span>HONORS BIOLOGY</span>
+  </div>
+
+  <div class="panel glass">
+    <div class="eyebrow" id="quizProgress">QUESTION 01 / 10</div>
+    <h3 class="quiz-question" id="question">Where does photosynthesis occur?</h3>
+    <div class="answers" id="answers"></div>
+    <div class="quiz-feedback" id="feedback" aria-live="polite"></div>
+    <button class="primary" id="nextQuestion" onclick="nextQuestion()" disabled>NEXT QUESTION →</button>
+    <div id="finalScore" class="hidden"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  VERDANT LABS © 2026 — BUILT FOR SCIENCE<br><br>
+  EST. BY SAHARSH • 2026
+</footer>
 
 </main>
 </div>
 
+<div class="notification glass" id="notification" role="status" aria-live="polite">
+  <h3 id="noticeTitle">VARIABLE UPDATED</h3>
+  <div class="change" id="noticeChange">50% → 80%</div>
+  <p id="noticeText">Sunlight availability increased.</p>
+</div>
+
 <script>
-const light = document.getElementById("light");
-const co2 = document.getElementById("co2");
-const water = document.getElementById("water");
+// ====================================
+// VERDANT / SIMULATION ENGINE
+// ====================================
 
-function updateLab() {
+const sliders = {
+  light:document.getElementById("light"),
+  co2:document.getElementById("co2"),
+  water:document.getElementById("water")
+};
 
-  const l = Number(light.value);
-  const c = Number(co2.value);
-  const w = Number(water.value);
+const previous = {light:50,co2:50,water:50};
+const names = {
+  light:"Sunlight",
+  co2:"Carbon dioxide",
+  water:"Water availability"
+};
 
-  document.getElementById("lightValue").textContent = l + "%";
-  document.getElementById("co2Value").textContent = c + "%";
-  document.getElementById("waterValue").textContent = w + "%";
+const explanations = {
+  light:"More light energy is available for chlorophyll to absorb.",
+  co2:"More carbon dioxide is available for carbon fixation.",
+  water:"More water is available for the light-dependent reactions."
+};
 
-  // Simplified limiting-factor simulation
+let notificationTimeout;
+
+function updateSliderVisual(slider){
+  const value = Number(slider.value);
+  slider.style.background =
+    `linear-gradient(90deg,var(--green) ${value}%,#ffffff20 ${value}%)`;
+}
+
+function updateLab(changed = null){
+
+  const l = Number(sliders.light.value);
+  const c = Number(sliders.co2.value);
+  const w = Number(sliders.water.value);
+
+  const values = {light:l,co2:c,water:w};
+
+  Object.entries(values).forEach(([key,value])=>{
+    document.getElementById(key+"Value").textContent=value+"%";
+    document.getElementById(key+"Metric").textContent=value+"%";
+    updateSliderVisual(sliders[key]);
+  });
+
+  // Simplified limiting-factor model
   const rate = Math.min(l,c,w);
 
-  document.getElementById("rate").textContent = rate + "%";
-  document.getElementById("progress").style.width = rate + "%";
+  document.getElementById("rate").textContent=rate+"%";
+  document.getElementById("progress").style.width=rate+"%";
 
-  const factors = [
-    {name:"Sunlight", value:l},
-    {name:"Carbon dioxide", value:c},
-    {name:"Water", value:w}
-  ];
+  const lowest = Math.min(l,c,w);
+  const limitingFactors = Object.keys(values).filter(k=>values[k]===lowest);
+  const limiting = limitingFactors.length===3
+    ? "Balanced"
+    : limitingFactors.map(k=>names[k]).join(" + ");
 
-  const limiting = factors.reduce((a,b) =>
-    a.value <= b.value ? a : b
-  );
+  document.getElementById("limiting").textContent=limiting;
 
-  let status;
-  if(rate === 0) status = "NO SIMULATED ACTIVITY";
-  else if(rate < 35) status = "LOW ACTIVITY";
-  else if(rate < 70) status = "MODERATE ACTIVITY";
-  else status = "HIGH ACTIVITY";
+  let status = rate===0 ? "NO SIMULATED ACTIVITY"
+    : rate<35 ? "LOW ACTIVITY"
+    : rate<70 ? "MODERATE ACTIVITY"
+    : "HIGH ACTIVITY";
 
-  document.getElementById("status").textContent =
-    "● " + status;
+  document.getElementById("status").textContent="● "+status;
 
   document.getElementById("explanation").textContent =
-    rate === 0
-      ? "One or more required inputs are unavailable. The simulation shows no photosynthesis."
-      : limiting.name + " is currently the limiting factor. Increasing it may improve the simulated rate.";
+    rate===0
+      ? "At least one required input is unavailable. The simplified model shows no photosynthesis."
+      : limiting==="Balanced"
+      ? "All three inputs are equally available in this simulation."
+      : limiting+" is currently the limiting factor. Increasing its availability may improve the simulated rate.";
 
-  document.getElementById("plant").style.transform =
-    `scale(${0.8 + rate / 250})`;
+  // Dynamic plant visual
+  const plant = document.getElementById("plant");
+  const card = document.getElementById("plantCard");
+  const activity = document.getElementById("particles");
+
+  plant.style.filter =
+    `brightness(${0.55+rate/200}) drop-shadow(0 0 ${10+rate/2}px #39ff8290)`;
+
+  plant.style.transform =
+    `scale(${0.85+rate/500})`;
+
+  card.style.background =
+    `radial-gradient(circle,rgba(30,${45+rate},55,${0.2+rate/180}) 0%,#0a2515 55%,transparent 85%)`;
+
+  activity.style.opacity=(0.15+rate/130).toString();
+  activity.style.animationDuration=(7-rate/20)+"s";
+
+  document.getElementById("plantStatus").textContent =
+    rate>=70 ? "HIGH ACTIVITY"
+    : rate>=35 ? "MODERATE ACTIVITY"
+    : rate>0 ? "LIMITED ACTIVITY"
+    : "INPUT UNAVAILABLE";
+
+  if(changed){
+    showNotification(changed,values[changed]);
+  }
 }
 
-function resetLab() {
-  light.value = 50;
-  co2.value = 50;
-  water.value = 50;
+function showNotification(key,value){
+  const old=previous[key];
+  const direction=value>old?"INCREASED":value<old?"DECREASED":"UNCHANGED";
+
+  document.getElementById("noticeTitle").textContent=
+    names[key].toUpperCase()+" "+direction;
+
+  document.getElementById("noticeChange").textContent=
+    old+"% → "+value+"%";
+
+  document.getElementById("noticeText").textContent=
+    value===old ? "The value has not changed."
+    : direction==="INCREASED"
+    ? explanations[key]
+    : key==="light"
+    ? "Less light energy is available for photosynthesis."
+    : key==="co2"
+    ? "Less carbon dioxide is available for carbon fixation."
+    : "Less water is available for the light-dependent reactions.";
+
+  const notification=document.getElementById("notification");
+  notification.classList.add("show");
+
+  clearTimeout(notificationTimeout);
+  notificationTimeout=setTimeout(()=>{
+    notification.classList.remove("show");
+  },2800);
+
+  previous[key]=value;
+}
+
+Object.entries(sliders).forEach(([key,slider])=>{
+  slider.addEventListener("input",()=>updateLab(key));
+});
+
+function resetLab(){
+  Object.entries(sliders).forEach(([key,slider])=>{
+    slider.value=50;
+    previous[key]=50;
+  });
   updateLab();
+  document.getElementById("noticeTitle").textContent="EXPERIMENT RESET";
+  document.getElementById("noticeChange").textContent="50% / 50% / 50%";
+  document.getElementById("noticeText").textContent="All environmental variables have been restored.";
+  const notification=document.getElementById("notification");
+  notification.classList.add("show");
+  clearTimeout(notificationTimeout);
+  notificationTimeout=setTimeout(()=>notification.classList.remove("show"),2800);
 }
 
-[light,co2,water].forEach(input =>
-  input.addEventListener("input",updateLab)
-);
+// ====================================
+// EQUATION INTERACTIVITY
+// ====================================
 
+const molecules={
+  co2:{
+    name:"Carbon dioxide (CO₂)",
+    text:"A reactant absorbed from the atmosphere through stomata. Its carbon atoms are incorporated into organic molecules during the Calvin cycle."
+  },
+  h2o:{
+    name:"Water (H₂O)",
+    text:"A reactant absorbed by roots and transported through xylem. Water is split during the light-dependent reactions, releasing oxygen."
+  },
+  glucose:{
+    name:"Glucose (C₆H₁₂O₆)",
+    text:"A sugar that stores chemical energy. Plants use the products of photosynthesis to build sugars and other organic molecules."
+  },
+  oxygen:{
+    name:"Oxygen (O₂)",
+    text:"A product released into the atmosphere. The oxygen gas comes from the splitting of water during the light-dependent reactions."
+  }
+};
+
+function showMolecule(key){
+  const m=molecules[key];
+  document.getElementById("moleculeInfo").innerHTML=
+    "<strong style='color:var(--green)'>"+m.name+
+    "</strong><br>"+m.text;
+}
+
+// ====================================
+// LEARNING CARDS
+// ====================================
+
+function expandCard(card){
+  const paragraphs=card.querySelectorAll("p");
+  const details=paragraphs[1];
+  details.classList.toggle("hidden");
+}
+
+// ====================================
+// HONORS BIOLOGY QUIZ
+// ====================================
+
+const questions=[
+{
+q:"Where does photosynthesis primarily occur?",
+a:["Mitochondria","Chloroplasts","Nucleus","Ribosomes"],
+c:1,
+e:"Chloroplasts contain chlorophyll and the structures required for photosynthesis."
+},
+{
+q:"What is the primary role of chlorophyll?",
+a:["Absorb light energy","Absorb minerals","Store glucose","Release carbon dioxide"],
+c:0,
+e:"Chlorophyll absorbs light energy, especially red and blue wavelengths."
+},
+{
+q:"Where does a plant primarily absorb water?",
+a:["Flowers","Stomata","Roots","Petals"],
+c:2,
+e:"Roots absorb water from the soil, and xylem transports it toward the leaves."
+},
+{
+q:"What gas enters leaves through stomata for photosynthesis?",
+a:["Oxygen","Nitrogen","Carbon dioxide","Hydrogen"],
+c:2,
+e:"Carbon dioxide enters through stomata and supplies carbon for sugar production."
+},
+{
+q:"Which molecule is a product of photosynthesis?",
+a:["Carbon dioxide","Glucose","Water","Nitrogen"],
+c:1,
+e:"Glucose is a sugar produced using energy from photosynthesis."
+},
+{
+q:"Where do the light-dependent reactions occur?",
+a:["Stroma","Cytoplasm","Thylakoid membranes","Nucleus"],
+c:2,
+e:"Light-dependent reactions take place in the thylakoid membranes."
+},
+{
+q:"What gas is released when water is split?",
+a:["Carbon dioxide","Oxygen","Nitrogen","Methane"],
+c:1,
+e:"Oxygen is released during the splitting of water in the light-dependent reactions."
+},
+{
+q:"What is the main purpose of the Calvin cycle?",
+a:["Capture sunlight directly","Fix carbon dioxide into organic molecules","Release oxygen from glucose","Absorb water through roots"],
+c:1,
+e:"The Calvin cycle uses ATP and NADPH to incorporate carbon dioxide into organic molecules."
+},
+{
+q:"Which three inputs are represented in the overall photosynthesis equation?",
+a:["Oxygen, glucose, and nitrogen","Water, oxygen, and light","Carbon dioxide, water, and light energy","Glucose, minerals, and oxygen"],
+c:2,
+e:"Carbon dioxide, water, and light energy are the inputs in the overall equation."
+},
+{
+q:"Why is photosynthesis important to most life on Earth?",
+a:["It removes all carbon dioxide","It supports food chains and releases oxygen","It eliminates the need for water","It creates sunlight"],
+c:1,
+e:"Photosynthesis supports food webs by producing organic matter and releases oxygen into the atmosphere."
+}
+];
+
+let questionIndex=0;
+let score=0;
+let answered=false;
+
+function renderQuestion(){
+  const q=questions[questionIndex];
+  answered=false;
+
+  document.getElementById("quizProgress").textContent=
+    `QUESTION ${String(questionIndex+1).padStart(2,"0")} / 10`;
+
+  document.getElementById("question").textContent=q.q;
+  document.getElementById("feedback").textContent="";
+  document.getElementById("nextQuestion").disabled=true;
+
+  const answers=document.getElementById("answers");
+  answers.innerHTML="";
+
+  q.a.forEach((answer,index)=>{
+    const button=document.createElement("button");
+    button.className="answer";
+    button.textContent=answer;
+    button.onclick=()=>chooseAnswer(index,button);
+    answers.appendChild(button);
+  });
+}
+
+function chooseAnswer(index,button){
+  if(answered)return;
+  answered=true;
+
+  const q=questions[questionIndex];
+  const buttons=document.querySelectorAll(".answer");
+
+  buttons.forEach((b,i)=>{
+    if(i===q.c)b.classList.add("correct");
+    if(i===index && index!==q.c)b.classList.add("wrong");
+    b.disabled=true;
+  });
+
+  if(index===q.c){
+    score++;
+    document.getElementById("feedback").textContent=
+      "✓ CORRECT — "+q.e;
+  }else{
+    document.getElementById("feedback").textContent=
+      "✕ NOT QUITE — "+q.e;
+  }
+
+  document.getElementById("nextQuestion").disabled=false;
+  document.getElementById("nextQuestion").textContent=
+    questionIndex===9?"VIEW RESULTS →":"NEXT QUESTION →";
+}
+
+function nextQuestion(){
+  if(!answered)return;
+
+  questionIndex++;
+
+  if(questionIndex>=questions.length){
+    document.getElementById("question").textContent="EXPERIMENT COMPLETE";
+    document.getElementById("answers").innerHTML="";
+    document.getElementById("quizProgress").textContent="FINAL RESULTS";
+    document.getElementById("feedback").textContent=
+      `You scored ${score} out of 10. ${score>=8?"Excellent work!":score>=5?"Good effort! Keep learning.":"Keep practicing. You can improve!"}`;
+
+    const button=document.getElementById("nextQuestion");
+    button.textContent="RESTART QUIZ ↻";
+    button.disabled=false;
+    button.onclick=restartQuiz;
+    return;
+  }
+
+  renderQuestion();
+}
+
+function restartQuiz(){
+  questionIndex=0;
+  score=0;
+  const button=document.getElementById("nextQuestion");
+  button.onclick=nextQuestion;
+  button.textContent="NEXT QUESTION →";
+  renderQuestion();
+}
+
+// INITIALIZE
 updateLab();
-</script>
+renderQuestion();
 
+</script>
 </body>
 </html>
