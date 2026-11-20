@@ -997,3 +997,49 @@ function chooseAnswer(index,button){
 
   const q=questions[questionIndex];
   const buttons=document.querySelectorAll(".answer");
+  buttons.forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.c) b.classList.add("correct");
+  });
+
+  if(index===q.c){
+    score++;
+    document.getElementById("feedback").textContent="Correct! "+q.e;
+  } else {
+    button.classList.add("wrong");
+    document.getElementById("feedback").textContent="Not quite. "+q.e;
+  }
+  document.getElementById("nextQuestion").disabled=false;
+}
+
+function nextQuestion(){
+  if(!answered)return;
+  questionIndex++;
+  if(questionIndex<questions.length){
+    renderQuestion();
+    return;
+  }
+  document.getElementById("quizProgress").textContent="LAB COMPLETE";
+  document.getElementById("question").textContent="Experiment complete!";
+  document.getElementById("answers").innerHTML="";
+  document.getElementById("feedback").textContent="";
+  document.getElementById("nextQuestion").classList.add("hidden");
+  const finalScore=document.getElementById("finalScore");
+  finalScore.classList.remove("hidden");
+  finalScore.innerHTML="<h3 style='color:var(--green)'>YOUR SCORE: "+score+" / "+questions.length+"</h3><p class='explanation'>"+(score>=8?"Excellent work!":score>=5?"Good effort—review the learning center and try again.":"Keep practicing. Review the learning center and try again.")+"</p><button class='primary' onclick='restartQuiz()'>RETAKE QUIZ ↻</button>";
+}
+
+function restartQuiz(){
+  questionIndex=0;
+  score=0;
+  answered=false;
+  document.getElementById("finalScore").classList.add("hidden");
+  document.getElementById("nextQuestion").classList.remove("hidden");
+  renderQuestion();
+}
+
+updateLab();
+renderQuestion();
+</script>
+</body>
+</html>
